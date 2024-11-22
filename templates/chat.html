@@ -35,6 +35,10 @@
             padding: 8px 15px;
             max-width: 70%;
         }
+
+        .options-container{
+            background-color: #f0f0f0;
+        }
         .user-message .message-text {
             background-color: #e1e1e1;
             color: #333;
@@ -70,10 +74,14 @@
                 {% if message.is_user %}
                 <li class="message user-message">
                     <div class="message-text">{{message.text}}</div>
+                    
                 </li>
                 {% else %}
                 <li class="message bot-message">
-                    <div class="message-text">{{message.text}}</div>
+                    <div class="message-text">{{message.text}}    
+                         
+                    </div>
+         
                 </li>
                 {% endif %}
             {% endfor %}
@@ -92,9 +100,17 @@
             + '/chat/'
         );
 
+        chatSocket.onopen= function(e){
+            console.log("started")
+        }
+
+        chatSocket.onerror = function (error) {
+            console.error('WebSocket error:', error);
+        };
+
         chatSocket.onmessage = function(e) {
             const data = JSON.parse(e.data);
-            addMessage(data.text, data.is_user);
+            addMessage(data.text,data.options, data.is_user);
         };
 
         chatSocket.onclose = function(e) {
@@ -128,15 +144,33 @@
         };
 
     // Function to add a new message to the chat container
-    function addMessage(text, isUser = false) {
+    function addMessage(text,options, isUser = false) {
+       
         const chatMessages = document.getElementById('chat-messages');
         const messageClass = isUser ? 'user-message' : 'bot-message';
-        const messageText = `
-            <li class="message ${messageClass}">
-                <div class="message-text">${text}</div>
+        const messageText = isUser ? `
+            <li class="message ${messageClass}"  >
+                <div class="message-text"  >${text}</div>
+                 
             </li>
-        `;
+        ` :`
+            <li class="message ${messageClass}" style = "flex-direction: column;">
+                <div class="message-text"  >${text}</div>
+                 <div class="message-text options-container" ></div>
+                 
+            </li>
+        ` ;
         chatMessages.insertAdjacentHTML('beforeend', messageText);
+
+        if(!isUser){
+            const optionsContainer = chatMessages.lastElementChild.querySelector('.options-container');
+         options.forEach((option,index) => {
+             
+        const optionElement = document.createElement('div');
+        optionElement.textContent =(index + 1) + ". " +option;
+        optionsContainer.appendChild(optionElement);
+    });
+        }
     }
 
     // Function to handle user message submission

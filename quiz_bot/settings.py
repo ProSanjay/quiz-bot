@@ -40,9 +40,14 @@ SECRET_KEY = 'django-insecure-td(*4#)n^+hy_z=kn+(&7g=aj)a7)!)cqoh28p2sxdozd_0-d7
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = bool_value('DEBUG', True)
 
+# ALLOWED_HOSTS = [
+#     "localhost","127.0.0.1"
+# ]
+
 ALLOWED_HOSTS = [
     "localhost",
 ]
+
 
 if DEBUG:
     ALLOWED_HOSTS.append("*")
@@ -96,7 +101,7 @@ CHANNEL_LAYERS = {
     "default": {
         "BACKEND": "channels_redis.core.RedisChannelLayer",
         "CONFIG": {
-            "hosts": [("redis", 6379)],
+            "hosts": [("127.0.0.1", 6379)],
         },
     },
 }
@@ -116,6 +121,16 @@ DATABASES = {
     }
 }
 
+# DATABASES = {
+#     'default': {
+#         'ENGINE': 'django.db.backends.postgresql',
+#         'NAME':  'postgres',
+#         'USER':  'postgres',
+#         'PASSWORD': 'chatbot',
+#         'HOST': "localhost",
+#         'PORT':  '5432',
+#     }
+# }
 
 # Password validation
 # https://docs.djangoproject.com/en/3.2/ref/settings/#auth-password-validators

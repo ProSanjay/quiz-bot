@@ -31,17 +31,33 @@ def generate_bot_responses(message, session):
 def record_current_answer(answer, current_question_id, session):
     '''
     Validates and stores the answer for the current question to django session.
-    
     '''
+    if "score" not in session:
+        session["score"] = 0
+
+    if(current_question_id == None):
+       session["score"] = 0
+       return True, ""
+     
+    if(answer == PYTHON_QUESTION_LIST[(current_question_id - 1)]['answer']):
+        session["score"] = session["score"] + 1
+        session.modified = True  # Mark the session as modified to ensure it is saved
     return True, ""
 
 
 def get_next_question(current_question_id):
-    '''
-    Fetches the next question from the PYTHON_QUESTION_LIST based on the current_question_id.
-    '''
+    if(current_question_id == None):
+        return  [PYTHON_QUESTION_LIST[0]['question_text'],PYTHON_QUESTION_LIST[0]['options']] , 1
+    else:
+        if(current_question_id < len(PYTHON_QUESTION_LIST)):
+            return [PYTHON_QUESTION_LIST[current_question_id]['question_text'],PYTHON_QUESTION_LIST[current_question_id]['options']] , current_question_id + 1
+        else : 
+            return False , -1
+    # '''
+    # Fetches the next question from the PYTHON_QUESTION_LIST based on the current_question_id.
+    # '''
 
-    return "dummy question", -1
+    # return "dummy question", -1
 
 
 def generate_final_response(session):
@@ -50,4 +66,4 @@ def generate_final_response(session):
     by the user for questions in the PYTHON_QUESTION_LIST.
     '''
 
-    return "dummy result"
+    return ["Your Score out of 10 : ",session["score"]]

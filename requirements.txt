@@ -2,3 +2,7 @@ Django==3.2.16
 psycopg2-binary==2.9.5
 channels==3.0.5
 channels-redis==3.3.1
+
+# I encountered errors after installing channels==3.0.5 and channels-redis==3.3.1. 
+# As a workaround, I downgraded channels-redis to version 2.4.0. 
+# Additionally, I faced issues with psycopg2-binary==2.9.5. To resolve this, I uninstalled it and reinstalled the latest version without specifying a specific version.

@@ -25,11 +25,9 @@ class ChatConsumer(WebsocketConsumer):
         )
 
     # Receive message from WebSocket
-    def receive(self, text_data):
-
+    def receive(self, text_data): 
         text_data_json = json.loads(text_data)
         user_message = text_data_json['message']
-
         if user_message == '/reset':
             self.scope['session']['current_question_id'] = None
             self.scope['session']['message_history'] = []
@@ -53,7 +51,8 @@ class ChatConsumer(WebsocketConsumer):
             bot_response_obj = {
                 'type': 'chat_message',
                 'is_user': False,
-                'text': bot_response
+                'text': bot_response[0],
+                'options': bot_response[1]
             }
             # Send message to room group
             async_to_sync(self.channel_layer.group_send)(
